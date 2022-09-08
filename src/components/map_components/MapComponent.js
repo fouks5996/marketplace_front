@@ -8,6 +8,8 @@ function MapComponent({ mapCenter, input }) {
 	const [data, setData] = useState();
 
 	useEffect(() => {
+		console.log("input", input);
+
 		fetch(API + "articles")
 			.then((response) => {
 				return response.json();
@@ -28,6 +30,7 @@ function MapComponent({ mapCenter, input }) {
 				data
 					.filter((city) => city.location.match(input))
 					.map((article) => (
+						<>
 						<Marker position={[article.lat, article.lon]}>
 							<Popup>
 								<ul>
@@ -37,6 +40,7 @@ function MapComponent({ mapCenter, input }) {
 								</ul>
 							</Popup>
 						</Marker>
+						</>
 					))}
 			<RecenterAutomatically lat={mapCenter[0]} lng={mapCenter[1]} />
 		</MapContainer>
