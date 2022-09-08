@@ -4,15 +4,16 @@ import {
 	errorMessageValues,
 	errorInput,
 	errorMessage,
-} from "../components/auth/errors";
+} from "../auth/errors";
 import Cookies from "js-cookie";
-import { API } from "../utils/variables";
-import { getCoordinate } from "./functions/getCoordinates";
+import { API } from "../../utils/variables";
+import Autocompletion from "./Autocompletion";
 
 function CreateArticle({ forceUpdate }) {
 	const token = Cookies.get("token");
 	const [autocomplete, setAutocomplete] = useState();
 	const [autocompleteVisible, setAutocompleteVisible] = useState(false);
+	const [ coordinates, setCoordinates ] = useState(null);
 
 	const {
 		register,
@@ -27,18 +28,30 @@ function CreateArticle({ forceUpdate }) {
 				"Content-type": "application/json",
 				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify({ article: data }),
+			body: JSON.stringify({ article:{
+				title: data.title,
+				content: data.content,
+				price: data.price,
+				other_charges: data.other_charges,
+				location: coordinates.location,
+				lat: coordinates.lat,
+				lon: coordinates.lon,
+				city: coordinates.city,
+				furnished: data.furnished,
+				included_charges: data.included_charges,
+				surface: data.surface
+			} }),
 		})
 			.then((response) => {
 				forceUpdate();
 				return response.json();
 			})
 			.then((res) => {
-				getCoordinate(res.location, res.id);
 			});
 	};
 
 	function getData(e) {
+		
 		if (e.target.value.length > 4) {
 			fetch(
 				`https://api.geoapify.com/v1/geocode/autocomplete?text=${e.target.value}&format=json&apiKey=9aa5158850824f25b76a238e1d875cc8`
@@ -111,6 +124,7 @@ function CreateArticle({ forceUpdate }) {
 						)}`}
 						onChange={getData}
 						type='text'
+						id='autocomplete-create'
 						// {...register("location", errorMessageValues.location)}
 					/>
 					{autocompleteVisible && (
@@ -118,10 +132,12 @@ function CreateArticle({ forceUpdate }) {
 							{" "}
 							{autocomplete &&
 								autocomplete.results.map((res) => (
-									<p className='border-b border-slate-300 py-1 hover:bg-slate-100 cursor-pointer'>
-										{console.log(res)}
-										{res.formatted}{" "}
-									</p>
+									<Autocompletion
+										res={res}
+										setCoordinates={setCoordinates}
+										setAutocompleteVisible={setAutocompleteVisible}
+										origin={"createForm"}
+										/>
 								))}{" "}
 						</div>
 					)}

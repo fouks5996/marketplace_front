@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useReducer, useState } from "react";
 import Article from "../../components/article/Article";
 import { logged } from "../../components/atoms/logged";
-import CreateArticle from "../../components/CreateArticle";
+import CreateArticle from "../../components/article/CreateArticle";
 import FormEdit from "../../components/userEdit/FormEdit";
 import { API } from "../../utils/variables";
 import "./user.scss";

@@ -12,7 +12,7 @@ function Map(props) {
 	const { register, handleSubmit } = useForm();
 
 	const OnSubmit = (input) => {
-		setSearchedCity(input.location.toLowerCase());
+		setSearchedCity(input.location);
 		fetch(
 			`https://api.geoapify.com/v1/geocode/search?city=${input.location}&format=json&apiKey=9aa5158850824f25b76a238e1d875cc8`
 		)
@@ -30,19 +30,19 @@ function Map(props) {
 				return response.json();
 			})
 			.then((res) => {
-				setData(cleanInput(res));
+				setData(removeDuplicatedCity(res))
 			});
 	}, [setData, mapCenter]);
 
-	const cleanInput = (res) => {
+	const removeDuplicatedCity = (res) => {
 		return [
 			...new Set(
 				res.map((article) => {
-					return article.location.split(" ").pop();
+					return article.city;
 				})
 			),
 		];
-	};
+	}
 
 	return (
 		<div className=''>
@@ -59,8 +59,8 @@ function Map(props) {
 						{...register("location", errorMessageValues.location)}>
 						<option> Choisir une ville 🏘 </option>
 						{data &&
-							data.map((location) => (
-								<option value={location}>{location}</option>
+							data.map((article) => (
+								<option value={article}>{article}</option>
 							))}
 					</select>
 				</div>
