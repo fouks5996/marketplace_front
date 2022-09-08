@@ -22,7 +22,7 @@ function Home(props) {
 	const [surface, setSurface] = useState([0, 500]);
 
 	useEffect(() => {
-		fetch(API + "articles")
+		fetch(API + "articles", { mode: "no-cors" })
 			.then((response) => {
 				return response.json();
 			})
