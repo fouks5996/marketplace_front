@@ -18,7 +18,15 @@ function Article({ article, allowEdit, forceUpdate }) {
 	const isLogged = useAtomValue(logged);
 	const [autocompleteVisible, setAutocompleteVisible] = useState(false);
 	const [autocomplete, setAutocomplete] = useState();
-	const [ coordinates, setCoordinates ] = useState(null);
+	const [coordinates, setCoordinates] = useState({
+		lat: article.lat,
+		lon: article.lon,
+		city: article.city,
+		location: article.location,
+	});
+
+	console.log(article);
+	console.log(coordinates);
 
 	const {
 		register,
@@ -42,19 +50,21 @@ function Article({ article, allowEdit, forceUpdate }) {
 				"Content-type": "application/json",
 				Authorization: `Bearer ${token}`,
 			},
-			body: JSON.stringify({ article:{
-				title: data.title,
-				content: data.content,
-				price: data.price,
-				other_charges: data.other_charges,
-				location: coordinates.location,
-				lat: coordinates.lat,
-				lon: coordinates.lon,
-				city: coordinates.city,
-				furnished: data.furnished,
-				included_charges: data.included_charges,
-				surface: data.surface
-			} }),
+			body: JSON.stringify({
+				article: {
+					title: data.title,
+					content: data.content,
+					price: data.price,
+					other_charges: data.other_charges,
+					location: coordinates.location,
+					lat: coordinates.lat,
+					lon: coordinates.lon,
+					city: coordinates.city,
+					furnished: data.furnished,
+					included_charges: data.included_charges,
+					surface: data.surface,
+				},
+			}),
 		})
 			.then((response) => {
 				forceUpdate();
@@ -71,7 +81,6 @@ function Article({ article, allowEdit, forceUpdate }) {
 	}
 
 	function getData(e) {
-		
 		if (e.target.value.length > 4) {
 			fetch(
 				`https://api.geoapify.com/v1/geocode/autocomplete?text=${e.target.value}&format=json&apiKey=9aa5158850824f25b76a238e1d875cc8`
@@ -165,17 +174,18 @@ function Article({ article, allowEdit, forceUpdate }) {
 									{autocompleteVisible && (
 										<div className='border border-slate-500 rounded-xl p-3 absolute top-20 z-10 bg-white'>
 											{" "}
-											{autocomplete && autocomplete.results.map((res) => (
-												<Autocompletion
-													res={res}
-													setCoordinates={setCoordinates}
-													setAutocompleteVisible={setAutocompleteVisible}
-													origin={"editForm"}
+											{autocomplete &&
+												autocomplete.results.map((res) => (
+													<Autocompletion
+														res={res}
+														setCoordinates={setCoordinates}
+														setAutocompleteVisible={setAutocompleteVisible}
+														origin={"editForm"}
 													/>
-											))}{" "}
-									</div>
-					)}
-					{errorMessage(errors.location)}
+												))}{" "}
+										</div>
+									)}
+									{errorMessage(errors.location)}
 								</div>
 								<div className='flex items-center gap-2'>
 									<input

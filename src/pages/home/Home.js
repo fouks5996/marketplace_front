@@ -17,12 +17,12 @@ function Home(props) {
 	const [data, setData] = useState();
 	const [recucerValue, forceUpdate] = useReducer((x) => x + 1, 0);
 	const isLogged = useAtomValue(logged);
-	const [radio, setRadio] = useState("any");
+	const [radio, setRadio] = useState("indifferent");
 	const [price, setPrice] = useState([0, 3000000]);
 	const [surface, setSurface] = useState([0, 500]);
 
 	useEffect(() => {
-		console.log('API', API)
+		console.log("API", API);
 		fetch(API + "articles")
 			.then((response) => {
 				return response.json();
@@ -105,7 +105,11 @@ function Home(props) {
 						onChange={handleRadio}>
 						<FormControlLabel value='true' control={<Radio />} label='Oui' />
 						<FormControlLabel value='false' control={<Radio />} label='Non' />
-						<FormControlLabel value='any' control={<Radio />} label='any' />
+						<FormControlLabel
+							value='indifferent'
+							control={<Radio />}
+							label='indifferent'
+						/>
 					</RadioGroup>
 				</FormControl>
 			</div>
@@ -127,7 +131,7 @@ function Home(props) {
 									article.price < price[1] &&
 									article.surface > surface[0] &&
 									article.surface < surface[1] &&
-									radio === "any")
+									radio === "indifferent")
 						)
 						.map((article) => (
 							<Article
