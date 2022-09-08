@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { currentuser } from "../atoms/logged";
 import { errorMessageValues, errorInput, errorMessage } from "../auth/errors";
@@ -8,7 +8,6 @@ import { API } from "../../utils/variables";
 import { logged } from "../atoms/logged";
 import { Link } from "react-router-dom";
 import "./article.scss";
-import ScrollReveal from "scrollreveal";
 import ArticleTags from "./ArticleTags";
 import { getCoordinate } from "../functions/getCoordinates";
 
@@ -16,7 +15,6 @@ function Article({ article, allowEdit, forceUpdate }) {
 	const [editing, setEditing] = useState(false);
 	const current_user = useAtomValue(currentuser);
 	const token = Cookies.get("token");
-	const [animation, setAnimation] = useState(false);
 	const isLogged = useAtomValue(logged);
 
 	const {
