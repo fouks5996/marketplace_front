@@ -22,6 +22,7 @@ function Home(props) {
 	const [surface, setSurface] = useState([0, 500]);
 
 	useEffect(() => {
+		console.log('API', API)
 		fetch(API + "articles")
 			.then((response) => {
 				return response.json();
